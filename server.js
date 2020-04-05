@@ -10,11 +10,12 @@ if (!port || !data) {
   process.exit(1);
 }
 
+const fileName = data.split('.')[0];
 const filePath = path.join(
   __dirname,
   '.well-known',
   'acme-challenge',
-  data.split('.')[0]
+  fileName
 );
 
 if (!fs.existsSync(filePath)) {
@@ -32,5 +33,10 @@ const server = http.createServer(function (req, res) {
 });
 
 server.listen(port, function () {
-  process.stdout.write('listening on port ' + port + '\n');
+  process.stdout.write('  listening on port: \t' + port + ' \n');
+  process.stdout.write(
+    'ready for challenge: \thttp://<domain-name>/.well-known/acme-challenge/' +
+      fileName +
+      '\n'
+  );
 });
