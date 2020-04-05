@@ -16,8 +16,7 @@ The following environment variables must be set:
 ```bash
 git clone https://github.com/rledford/certbot-challenge-server
 cd ./certbot-challenge-server
-PORT=80
-DATA=certbot.data node ./server
+PORT=80 DATA=certbot.data node ./server
 ```
 
 ### Windows CMD
