@@ -10,16 +10,16 @@ if (!port || !data) {
   process.exit(1);
 }
 
-const file = path.join(
+const filePath = path.join(
   __dirname,
   '.well-known',
   'acme-challenge',
   data.split('.')[0]
 );
 
-if (!fs.existsSync(file)) {
-  process.stdout.write(`creating required .well-known/acme-challenge file\n`);
-  fs.writeFileSync(file, data);
+if (!fs.existsSync(filePath)) {
+  process.stdout.write('creating required .well-known/acme-challenge file\n');
+  fs.writeFileSync(filePath, data);
 }
 
 const server = http.createServer(function (req, res) {
@@ -32,5 +32,5 @@ const server = http.createServer(function (req, res) {
 });
 
 server.listen(port, function () {
-  process.stdout.write(`listening on port ${port}\n`);
+  process.stdout.write('listening on port ' + port + '\n');
 });
