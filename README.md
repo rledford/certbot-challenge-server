@@ -24,20 +24,20 @@ DATA=certbot.data node ./server
 
 ```bash
 git clone https://github.com/rledford/certbot-challenge-server
-cd ./certbot-challenge-server
+cd .\certbot-challenge-server
 set PORT=80
 set DATA=certbot.data
-node ./server
+node .\server
 ```
 
 ### Windows PowerShell
 
 ```powershell
 git clone https://github.com/rledford/certbot-challenge-server
-cd ./certbot-challenge-server
+cd .\certbot-challenge-server
 $env:PORT="80"
 $env:DATA="certbot.data"
-node ./server
+node .\server
 ```
 
 ### Verify
