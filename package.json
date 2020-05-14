@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/rledford/certbot-challenge-server/issues"
   },
-  "homepage": "https://github.com/rledford/certbot-challenge-server#readme"
+  "homepage": "https://github.com/rledford/certbot-challenge-server#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }

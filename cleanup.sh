@@ -1,2 +1,3 @@
 #!/bin/bash
-rm -f ./.well-known/acme-challenge/$CERTBOT_TOKEN
+# modify path to token
+rm -f $TOKEN_PATH/$CERTBOT_TOKEN

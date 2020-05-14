@@ -1,42 +1,45 @@
-var http = require('http');
-var fs = require('fs');
-var path = require('path');
-
-const port = process.env.PORT;
-const data = process.env.DATA;
-if (!port || !data) {
-  if (!port) process.stdout.write('PORT required\n');
-  if (!data) process.stdout.write('DATA required\n');
+const path = require('path');
+const spawn = require('child_process').spawn;
+const express = require('express');
+const app = express();
+let config;
+try {
+  config = require('./config.json');
+} catch (err) {
+  console.log('config.json is missing or invalid');
   process.exit(1);
 }
+const { domain, renewInterval } = config;
 
-const fileName = data.split('.')[0];
-const filePath = path.join(
+const port = process.env.PORT || 80;
+const tokenPath = path.join(
   __dirname,
+  'public',
   '.well-known',
-  'acme-challenge',
-  fileName
+  'acme-challeng'
 );
+const prehook = path.join(__dirname, 'authenticator.sh');
+const posthook = path.join(__dirname, 'cleanup.sh');
 
-if (!fs.existsSync(filePath)) {
-  process.stdout.write('creating required .well-known/acme-challenge file\n');
-  fs.writeFileSync(filePath, data);
+app.use(express.static(path.join(__dirname, 'public')));
+app.listen(parseInt(port), () => {
+  console.log('listening on port', port);
+});
+
+let renewalInProgress = false;
+function execRenewal() {
+  if (renewalInProgress) return;
+  renewalInProgress = true;
+  const shell = spawn('sh', ['./renew.sh'], {
+    DOMAIN: domain,
+    TOKEN_PATH: tokenPath,
+    PRE_HOOK: prehook,
+    POST_HOOK: posthook
+  });
+  process.stdout.pipe(shell.stdout);
+  shell.on('close', () => {
+    renewalInProgress = false;
+  });
 }
 
-const server = http.createServer(function (req, res) {
-  var stream = fs.createReadStream(path.join(__dirname, req.url));
-  stream.on('error', function () {
-    res.writeHead(404);
-    res.end();
-  });
-  stream.pipe(res);
-});
-
-server.listen(port, function () {
-  process.stdout.write('  listening on port: \t' + port + ' \n');
-  process.stdout.write(
-    'ready for challenge: \thttp://<domain-name>/.well-known/acme-challenge/' +
-      fileName +
-      '\n'
-  );
-});
+setInterval(execRenewal, renewInterval);

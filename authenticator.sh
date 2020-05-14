@@ -1,2 +1,3 @@
 #!/bin/bash
-echo $CERTBOT_VALIDATION > ./.well-known/acme-challenge/$CERTBOT_TOKEN
+# modify path to token
+echo $CERTBOT_VALIDATION > $TOKEN_PATH/$CERTBOT_TOKEN
